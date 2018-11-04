@@ -10,7 +10,7 @@ class Handler {
     constructor(context, handler, count, frequncy) {
         this.context = context;
         this.handler = handler;
-        this.count = count <= 0 ? 1 : count;
+        this.count = count <= 0 ? Infinity : count;
         this.frequncy = (frequncy <= 0 ? 1 : frequncy) - 1;
         this.frequncyNow = this.frequncy;
     }
