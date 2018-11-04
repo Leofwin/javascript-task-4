@@ -7,29 +7,19 @@
 const isStar = true;
 
 class Handler {
-    constructor(context, handler, count, frequncy) {
+    constructor(context, handler, count, frequency) {
         this.context = context;
         this.handler = handler;
         this.count = count <= 0 ? Infinity : count;
-        this.frequncy = (frequncy <= 0 ? 1 : frequncy) - 1;
-        this.frequncyNow = this.frequncy;
+        this.frequency = frequency <= 0 ? 1 : frequency;
+        this.countNow = 0;
     }
 
     emit() {
-        if (this.frequncyNow < this.frequncy) {
-            this.frequncyNow++;
-
-            return;
+        if (this.countNow < this.count && (this.countNow % this.frequency) === 0) {
+            this.handler.call(this.context);
         }
-
-        this.frequncyNow = 0;
-
-        if (this.count <= 0) {
-            return;
-        }
-
-        this.handler.call(this.context);
-        this.count--;
+        this.countNow++;
     }
 }
 
@@ -136,7 +126,7 @@ function getEmitter() {
          * @returns {Object}
          */
         several: function (event, context, handler, times) {
-            const contextHandler = new Handler(context, handler, times);
+            const contextHandler = new Handler(context, handler, times, 1);
             addHandler(event, contextHandler);
 
             return this;
