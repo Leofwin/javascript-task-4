@@ -36,15 +36,13 @@ function getEmitter() {
 
     function getEventsToCall(event) {
         const result = [];
-
         let current = event;
-        while (current.length > 0) {
+        let lastDotIndex = 0;
+
+        while (lastDotIndex !== -1) {
             result.push(current);
 
-            const lastDotIndex = event.lastIndexOf('.');
-            if (lastDotIndex === current.length) {
-                break;
-            }
+            lastDotIndex = current.lastIndexOf('.');
             current = current.substring(0, lastDotIndex);
         }
 
@@ -126,7 +124,7 @@ function getEmitter() {
          * @returns {Object}
          */
         several: function (event, context, handler, times) {
-            const contextHandler = new Handler(context, handler, times, 1);
+            const contextHandler = createHandler(context, handler, times);
             addHandler(event, contextHandler);
 
             return this;
@@ -142,7 +140,7 @@ function getEmitter() {
          * @returns {Object}
          */
         through: function (event, context, handler, frequency) {
-            const contextHandler = new Handler(context, handler, Infinity, frequency);
+            const contextHandler = createHandler(context, handler, Infinity, frequency);
             addHandler(event, contextHandler);
 
             return this;
